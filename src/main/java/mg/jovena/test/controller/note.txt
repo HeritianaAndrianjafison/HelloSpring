@@ -1,0 +1,44 @@
+{
+  "projet": "HelloSpring",
+  "technologies": [
+    "Java 17",
+    "Spring Boot 3.2.5",
+    "Maven",
+    "Docker"
+  ],
+  "etapes": [
+    {
+      "etape": "Création du projet",
+      "description": "Création d'un projet Spring Boot nommé Test avec un controller 'TestController' contenant trois endpoints GET : /hello, /yes, /no."
+    },
+    {
+      "etape": "Configuration du controller",
+      "description": "Ajout de TestController.java avec trois méthodes exposant /hello, /yes et /no renvoyant des chaînes de caractères simples."
+    },
+    {
+      "etape": "Build Maven",
+      "description": "Compilation du projet et création du JAR avec Maven (`mvn clean package`). Tests unitaires exécutés et succès confirmés."
+    },
+    {
+      "etape": "Création du Dockerfile",
+      "description": "Dockerfile basé sur openjdk:17.0.2-jdk-slim, copie du JAR généré, configuration du WORKDIR, exposition du port 1234 et ENTRYPOINT pour exécuter le JAR."
+    },
+    {
+      "etape": "Pipeline Jenkins",
+      "description": "Création d'un Jenkinsfile avec les étapes : préparation du workspace, clonage du dépôt Git, build Maven, build de l'image Docker, déploiement du conteneur Docker."
+    },
+    {
+      "etape": "Build et déploiement Docker",
+      "description": "Construction de l'image Docker `hellospring:latest`, suppression éventuelle de l'ancien conteneur, lancement du nouveau conteneur sur le port 1234."
+    },
+    {
+      "etape": "Test des endpoints",
+      "description": "Accès via curl aux endpoints : `/hello`, `/yes`, `/no`. Initialement seul `/hello` fonctionnait car l'image Docker n'était pas à jour. Après rebuild, tous les endpoints fonctionnent."
+    },
+    {
+      "etape": "Résultat final",
+      "description": "Application Spring Boot déployée dans Docker, accessible sur localhost:1234 avec les endpoints fonctionnels : /hello, /yes, /no."
+    }
+  ],
+  "conclusion": "Pipeline complet fonctionnel : projet Spring Boot compilé, image Docker construite et conteneur déployé avec succès. Les endpoints supplémentaires ont été pris en compte après rebuild."
+}
