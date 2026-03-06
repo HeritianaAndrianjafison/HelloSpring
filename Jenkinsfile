@@ -13,14 +13,19 @@ pipeline {
                 sh """
                 # Crée le répertoire si inexistant
                 mkdir -p ${WORKSPACE_DIR}
-                cd ${WORKSPACE_DIR}
                 """
             }
         }
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/HeritianaAndrianjafison/HelloSpring.git'
+                sh """
+                # Supprime le contenu précédent pour éviter conflits
+                rm -rf ${WORKSPACE_DIR}/*
+
+                # Clone le dépôt directement dans WORKSPACE_DIR
+                git clone -b main https://github.com/HeritianaAndrianjafison/HelloSpring.git ${WORKSPACE_DIR}
+                """
             }
         }
 
