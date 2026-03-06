@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        WORKSPACE_DIR = "/home/heritiana/HelloSpring"   // Répertoire du projet
-        APP_PORT = "1234"                               // Port du serveur Spring Boot
-        JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64" // Forcer Java 17
+        WORKSPACE_DIR = "/home/heritiana/HelloSpring"
+        APP_PORT = "1234"
+        JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
         PATH = "${JAVA_HOME}/bin:${env.PATH}"
     }
 
@@ -13,7 +13,11 @@ pipeline {
         stage('Prepare Workspace') {
             steps {
                 sh """
-                mkdir -p ${WORKSPACE_DIR}
+                # Supprime complètement le répertoire si existant
+                if [ -d "${WORKSPACE_DIR}" ]; then
+                    rm -rf "${WORKSPACE_DIR}"
+                fi
+                mkdir -p "${WORKSPACE_DIR}"
                 """
             }
         }
@@ -21,11 +25,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 sh """
-                # Supprime tout contenu précédent
-                rm -rf ${WORKSPACE_DIR}/*
-
-                # Clone le dépôt dans WORKSPACE_DIR
-                git clone -b main https://github.com/HeritianaAndrianjafison/HelloSpring.git ${WORKSPACE_DIR}
+                git clone -b main https://github.com/HeritianaAndrianjafison/HelloSpring.git "${WORKSPACE_DIR}"
                 """
             }
         }
@@ -33,7 +33,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh """
-                cd ${WORKSPACE_DIR}
+                cd "${WORKSPACE_DIR}"
                 mvn clean package
                 """
             }
@@ -42,7 +42,7 @@ pipeline {
         stage('Run Jar') {
             steps {
                 sh """
-                cd ${WORKSPACE_DIR}
+                cd "${WORKSPACE_DIR}"
                 JAR_FILE=\$(ls target/*.jar | head -n 1)
 
                 if [ -z "\$JAR_FILE" ]; then
@@ -52,11 +52,9 @@ pipeline {
 
                 echo "Starting \$JAR_FILE on port ${APP_PORT}..."
 
-                # Stop any existing instance of this JAR
                 pkill -f \$JAR_FILE || true
 
-                # Lancer le jar en arrière-plan et rediriger les logs
-                nohup java -jar \$JAR_FILE --server.address=0.0.0.0 --server.port=${APP_PORT} > ${WORKSPACE_DIR}/app.log 2>&1 &
+                nohup java -jar \$JAR_FILE --server.address=0.0.0.0 --server.port=${APP_PORT} > "${WORKSPACE_DIR}/app.log" 2>&1 &
                 """
             }
         }
