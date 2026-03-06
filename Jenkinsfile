@@ -9,10 +9,38 @@ pipeline {
         DOCKER_BASE_IMAGE = "openjdk:17-slim"
         REMOTE_HOST = "172.29.191.35"
         REMOTE_USER = "root"
-        SSH_KEY = "/home/heritiana/.ssh/id_rsa_jenkins" // clé SSH correcte
+        SSH_KEY = "/home/heritiana/.ssh/id_rsa_jenkins"
     }
 
     stages {
+
+        stage('Setup Tools on Jenkins') {
+            steps {
+                sh '''
+                echo "Vérification et installation des outils sur Jenkins..."
+
+                # Git
+                if ! command -v git &> /dev/null; then
+                    sudo apt update && sudo apt install -y git
+                fi
+
+                # Maven
+                if ! command -v mvn &> /dev/null; then
+                    sudo apt update && sudo apt install -y maven
+                fi
+
+                # Docker
+                if ! command -v docker &> /dev/null; then
+                    sudo apt update && sudo apt install -y docker.io
+                fi
+
+                # bzip2
+                if ! command -v bzip2 &> /dev/null; then
+                    sudo apt update && sudo apt install -y bzip2
+                fi
+                '''
+            }
+        }
 
         stage('Prepare Workspace') {
             steps {
@@ -81,26 +109,23 @@ EOF
                 sh '''
                 echo "Déploiement sur Ubuntu-A via SSH..."
 
-                # Vérifier que bzip2 est installé sur Jenkins
-                if ! command -v bzip2 &> /dev/null; then
-                    sudo apt update && sudo apt install -y bzip2
-                fi
-
                 # Copier et charger l'image Docker sur le serveur distant
                 docker save ${IMAGE_NAME}:latest | bzip2 | ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} '
-                    # Installer bzip2 si absent
-                    if ! command -v bzip2 &> /dev/null; then
-                        apt update && apt install -y bzip2
-                    fi
+                    echo "Vérification et installation des outils sur le serveur distant..."
 
-                    # Installer Docker si absent
+                    # Docker
                     if ! command -v docker &> /dev/null; then
                         apt update && apt install -y docker.io
                     fi
 
-                    # Installer Java si absent
+                    # Java
                     if ! java -version &> /dev/null; then
                         apt update && apt install -y openjdk-17-jdk
+                    fi
+
+                    # bzip2
+                    if ! command -v bzip2 &> /dev/null; then
+                        apt update && apt install -y bzip2
                     fi
 
                     # Déployer le conteneur
@@ -111,6 +136,7 @@ EOF
                 '''
             }
         }
+
     }
 
     post {
