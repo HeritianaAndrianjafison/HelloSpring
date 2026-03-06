@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     environment {
-        WORKSPACE_DIR = "/home/heritiana/HelloSpring"   // Répertoire stable pour le projet et logs
+        WORKSPACE_DIR = "/home/heritiana/HelloSpring"   // Répertoire du projet
         APP_PORT = "1234"                               // Port du serveur Spring Boot
+        JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64" // Forcer Java 17
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"
     }
 
     stages {
@@ -11,7 +13,6 @@ pipeline {
         stage('Prepare Workspace') {
             steps {
                 sh """
-                # Crée le répertoire si inexistant
                 mkdir -p ${WORKSPACE_DIR}
                 """
             }
@@ -20,10 +21,10 @@ pipeline {
         stage('Checkout') {
             steps {
                 sh """
-                # Supprime le contenu précédent pour éviter conflits
+                # Supprime tout contenu précédent
                 rm -rf ${WORKSPACE_DIR}/*
 
-                # Clone le dépôt directement dans WORKSPACE_DIR
+                # Clone le dépôt dans WORKSPACE_DIR
                 git clone -b main https://github.com/HeritianaAndrianjafison/HelloSpring.git ${WORKSPACE_DIR}
                 """
             }
@@ -43,6 +44,12 @@ pipeline {
                 sh """
                 cd ${WORKSPACE_DIR}
                 JAR_FILE=\$(ls target/*.jar | head -n 1)
+
+                if [ -z "\$JAR_FILE" ]; then
+                    echo "Erreur : aucun fichier JAR trouvé dans target/"
+                    exit 1
+                fi
+
                 echo "Starting \$JAR_FILE on port ${APP_PORT}..."
 
                 # Stop any existing instance of this JAR
