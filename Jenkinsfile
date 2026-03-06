@@ -9,8 +9,7 @@ pipeline {
         DOCKER_BASE_IMAGE = "openjdk:17-slim"
         REMOTE_HOST = "172.29.191.35"
         REMOTE_USER = "root"
-        SSH_KEY = "/root/.ssh/id_rsa_jenkins"
-        SSH_PASSPHRASE = "1234"
+        SSH_KEY = "/home/heritiana/.ssh/id_rsa_jenkins" // clé SSH correcte
     }
 
     stages {
@@ -82,33 +81,33 @@ EOF
                 sh '''
                 echo "Déploiement sur Ubuntu-A via SSH..."
 
-                bash -c "
-                # Démarrage de ssh-agent
-                eval \$(ssh-agent -s)
-
-                # Ajout de la clé avec passphrase
-                echo '${SSH_PASSPHRASE}' | ssh-add ${SSH_KEY}
-
-                # Copier l'image Docker sur le serveur distant
-                docker save ${IMAGE_NAME}:latest | bzip2 | ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'bunzip2 | docker load'
-
-                # Exécution des commandes sur le serveur distant
-                ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} bash -c \\
-                'if ! command -v docker &> /dev/null; then
-                    apt update && apt install -y docker.io
+                # Vérifier que bzip2 est installé sur Jenkins
+                if ! command -v bzip2 &> /dev/null; then
+                    sudo apt update && sudo apt install -y bzip2
                 fi
 
-                if ! java -version &> /dev/null; then
-                    apt update && apt install -y openjdk-17-jdk
-                fi
+                # Copier et charger l'image Docker sur le serveur distant
+                docker save ${IMAGE_NAME}:latest | bzip2 | ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} '
+                    # Installer bzip2 si absent
+                    if ! command -v bzip2 &> /dev/null; then
+                        apt update && apt install -y bzip2
+                    fi
 
-                docker stop ${CONTAINER_NAME} || true
-                docker rm ${CONTAINER_NAME} || true
-                docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}:latest'
+                    # Installer Docker si absent
+                    if ! command -v docker &> /dev/null; then
+                        apt update && apt install -y docker.io
+                    fi
 
-                # Arrêter ssh-agent
-                ssh-agent -k
-                "
+                    # Installer Java si absent
+                    if ! java -version &> /dev/null; then
+                        apt update && apt install -y openjdk-17-jdk
+                    fi
+
+                    # Déployer le conteneur
+                    docker stop ${CONTAINER_NAME} || true
+                    docker rm ${CONTAINER_NAME} || true
+                    docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}:latest
+                '
                 '''
             }
         }
