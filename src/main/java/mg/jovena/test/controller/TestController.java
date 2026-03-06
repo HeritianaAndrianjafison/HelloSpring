@@ -15,4 +15,9 @@ public class TestController {
     public String sayYes() {
         return "YESSS !! ";
     }
+
+    @GetMapping("/no")
+    public String sayNo() {
+        return "Noooo !! ";
+    }
 }
