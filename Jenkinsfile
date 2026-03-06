@@ -42,12 +42,19 @@ pipeline {
         stage('Run Jar') {
             steps {
                 sh """
-                cd ${WORKSPACE_DIR}
+                cd "${WORKSPACE_DIR}"
                 JAR_FILE=\$(ls target/*.jar | head -n 1)
-                # Stop any existing instance
+
+                if [ -z "\$JAR_FILE" ]; then
+                    echo "Erreur : aucun fichier JAR trouvé dans target/"
+                    exit 1
+                fi
+
+                echo "Starting \$JAR_FILE on port ${APP_PORT}..."
+
                 pkill -f \$JAR_FILE || true
-                # Run in a detached screen session
-                screen -dmS HelloSpring java -jar \$JAR_FILE --server.address=0.0.0.0 --server.port=${APP_PORT}
+
+                nohup java -jar \$JAR_FILE --server.address=0.0.0.0 --server.port=${APP_PORT} > "${WORKSPACE_DIR}/app.log" 2>&1 &
                 """
             }
         }

@@ -10,4 +10,9 @@ public class TestController {
     public String helloWorld() {
         return "Hello World";
     }
+
+    @GetMapping("/yes")
+    public String sayYes() {
+        return "YESSS !! ";
+    }
 }
