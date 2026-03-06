@@ -3,69 +3,69 @@ pipeline {
 
     environment {
         WORKSPACE_DIR = "/home/heritiana/HelloSpring"
+        IMAGE_NAME = "hellospring"
+        CONTAINER_NAME = "hellospring-container"
         APP_PORT = "1234"
-        JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
-        PATH = "${JAVA_HOME}/bin:${env.PATH}"
     }
 
     stages {
 
         stage('Prepare Workspace') {
             steps {
-                sh """
-                # Supprime complètement le répertoire si existant
-                if [ -d "${WORKSPACE_DIR}" ]; then
-                    rm -rf "${WORKSPACE_DIR}"
-                fi
-                mkdir -p "${WORKSPACE_DIR}"
-                """
+                sh '''
+                rm -rf ${WORKSPACE_DIR} || true
+                mkdir -p ${WORKSPACE_DIR}
+                '''
             }
         }
 
         stage('Checkout') {
             steps {
-                sh """
-                git clone -b main https://github.com/HeritianaAndrianjafison/HelloSpring.git "${WORKSPACE_DIR}"
-                """
+                sh '''
+                git clone -b main https://github.com/HeritianaAndrianjafison/HelloSpring.git ${WORKSPACE_DIR}
+                '''
             }
         }
 
-        stage('Build') {
+        stage('Build JAR') {
             steps {
-                sh """
-                cd "${WORKSPACE_DIR}"
+                sh '''
+                cd ${WORKSPACE_DIR}
                 mvn clean package
-                """
+                '''
             }
         }
 
-        stage('Run Jar') {
+        stage('Build Docker Image') {
             steps {
-                sh """
-                cd "${WORKSPACE_DIR}"
-                JAR_FILE=\$(ls target/*.jar | head -n 1)
+                sh '''
+                cd ${WORKSPACE_DIR}
+                docker build -t ${IMAGE_NAME}:latest .
+                '''
+            }
+        }
 
-                if [ -z "\$JAR_FILE" ]; then
-                    echo "Erreur : aucun fichier JAR trouvé dans target/"
-                    exit 1
-                fi
+        stage('Deploy Container') {
+            steps {
+                sh '''
+                docker stop ${CONTAINER_NAME} || true
+                docker rm ${CONTAINER_NAME} || true
 
-                echo "Starting \$JAR_FILE on port ${APP_PORT}..."
-
-                pkill -f \$JAR_FILE || true
-
-                nohup java -jar \$JAR_FILE --server.address=0.0.0.0 --server.port=${APP_PORT} > "${WORKSPACE_DIR}/app.log" 2>&1 &
-                """
+                docker run -d \
+                --name ${CONTAINER_NAME} \
+                -p ${APP_PORT}:${APP_PORT} \
+                ${IMAGE_NAME}:latest
+                '''
             }
         }
     }
 
     post {
         success {
-            echo "Build et déploiement terminés ! Le serveur Spring Boot écoute sur le port ${APP_PORT}"
+            echo "Application déployée dans Docker sur le port ${APP_PORT}"
         }
         failure {
-            echo "Le pipeline a échoué."
+            echo "Le pipeline a échoué"
         }
     }
 }
