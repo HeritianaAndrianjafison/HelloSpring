@@ -82,35 +82,33 @@ EOF
                 sh '''
                 echo "Déploiement sur Ubuntu-A via SSH..."
 
-                # Démarrage de ssh-agent et ajout de la clé avec passphrase
-                eval $(ssh-agent -s)
-                ssh-add ${SSH_KEY} <<< "${SSH_PASSPHRASE}"
+                bash -c "
+                # Démarrage de ssh-agent
+                eval \$(ssh-agent -s)
 
-                # Copie de l'image Docker vers le serveur distant
+                # Ajout de la clé avec passphrase
+                echo '${SSH_PASSPHRASE}' | ssh-add ${SSH_KEY}
+
+                # Copier l'image Docker sur le serveur distant
                 docker save ${IMAGE_NAME}:latest | bzip2 | ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'bunzip2 | docker load'
 
-                # Commandes à exécuter sur le serveur distant
-                ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} bash -c "'
-                    # Installer Docker si absent
-                    if ! command -v docker &> /dev/null; then
-                        echo \"Docker non trouvé. Installation...\"
-                        apt update && apt install -y docker.io
-                    fi
+                # Exécution des commandes sur le serveur distant
+                ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} bash -c \\
+                'if ! command -v docker &> /dev/null; then
+                    apt update && apt install -y docker.io
+                fi
 
-                    # Installer Java si absent
-                    if ! java -version &> /dev/null; then
-                        echo \"Java non trouvé. Installation...\"
-                        apt update && apt install -y openjdk-17-jdk
-                    fi
+                if ! java -version &> /dev/null; then
+                    apt update && apt install -y openjdk-17-jdk
+                fi
 
-                    # Supprimer ancien conteneur et lancer le nouveau
-                    docker stop ${CONTAINER_NAME} || true
-                    docker rm ${CONTAINER_NAME} || true
-                    docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}:latest
-                '"
+                docker stop ${CONTAINER_NAME} || true
+                docker rm ${CONTAINER_NAME} || true
+                docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}:latest'
 
                 # Arrêter ssh-agent
                 ssh-agent -k
+                "
                 '''
             }
         }
