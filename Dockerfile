@@ -2,11 +2,8 @@ FROM openjdk:17.0.2-jdk-slim
 
 WORKDIR /app
 
-# Copier le jar compilé
 COPY target/*.jar app.jar
 
-# Exposer le port interne (peut rester 8080)
-EXPOSE 8080
+EXPOSE 8080 8081 8082  # Exposer tous les ports possibles
 
-# Démarrer l'application sans forcer un port
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
