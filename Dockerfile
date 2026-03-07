@@ -6,7 +6,7 @@ WORKDIR /app
 COPY target/*.jar app.jar
 
 # Exposer le port interne (peut rester 8080)
-EXPOSE 8586
+EXPOSE 8080
 
 # Démarrer l'application sans forcer un port
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
