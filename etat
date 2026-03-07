@@ -1,0 +1,157 @@
+```json
+{
+  "project": "CI/CD Spring Boot avec Docker et Ansible",
+  "environment": {
+    "platform": "Windows + WSL2",
+    "os": "Ubuntu 22.04",
+    "network": "localhost",
+    "servers": {
+      "jenkins": {
+        "role": "CI/CD orchestrator",
+        "status": "operational",
+        "ssh": {
+          "enabled": true,
+          "user": "root",
+          "port": 22
+        },
+        "software": [
+          "Java 21",
+          "Jenkins (jenkins.war)",
+          "Docker"
+        ]
+      },
+      "preprod": {
+        "role": "test deployment server",
+        "status": "operational",
+        "ssh": {
+          "enabled": true,
+          "user": "deploy",
+          "port": 2222
+        },
+        "software": [
+          "Docker"
+        ]
+      },
+      "prod": {
+        "role": "production deployment server",
+        "status": "operational",
+        "ssh": {
+          "enabled": true,
+          "user": "deploy",
+          "port": 2223
+        },
+        "software": [
+          "Docker"
+        ]
+      }
+    }
+  },
+  "security": {
+    "ssh_authentication": "SSH key",
+    "jenkins_key": "ed25519",
+    "passwordless_access": {
+      "jenkins_to_preprod": true,
+      "jenkins_to_prod": true
+    },
+    "authorized_keys_installed": true
+  },
+  "validated_tests": {
+    "ssh_preprod": "OK",
+    "ssh_prod": "OK",
+    "ssh_key_auth": "OK",
+    "command_execution_remote": "OK"
+  },
+  "architecture": {
+    "workflow": [
+      "Developer push code",
+      "GitHub webhook",
+      "Jenkins pipeline triggered",
+      "Build Spring Boot",
+      "Build Docker image",
+      "Push Docker image to registry",
+      "Deploy to preprod via Ansible",
+      "Validation step",
+      "Deploy to production"
+    ]
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "title": "Installer Ansible sur le serveur Jenkins",
+      "goal": "permettre à Jenkins d'orchestrer les déploiements",
+      "tasks": [
+        "apt install ansible",
+        "creer fichier inventory",
+        "tester connexion ansible vers preprod et prod"
+      ]
+    },
+    {
+      "step": 2,
+      "title": "Créer inventory Ansible",
+      "goal": "définir les serveurs cibles",
+      "example": {
+        "preprod": "localhost:2222",
+        "prod": "localhost:2223"
+      }
+    },
+    {
+      "step": 3,
+      "title": "Créer playbook Ansible de déploiement",
+      "goal": "automatiser docker pull et run",
+      "tasks": [
+        "pull docker image",
+        "stop ancien container",
+        "run nouveau container"
+      ]
+    },
+    {
+      "step": 4,
+      "title": "Créer Dockerfile pour projet Spring Boot",
+      "goal": "containeriser l'application",
+      "tasks": [
+        "build jar",
+        "copier jar dans image",
+        "exposer port application"
+      ]
+    },
+    {
+      "step": 5,
+      "title": "Installer Docker Registry",
+      "goal": "stocker images docker privées",
+      "options": [
+        "Docker Registry local",
+        "Harbor",
+        "GitHub Container Registry"
+      ]
+    },
+    {
+      "step": 6,
+      "title": "Créer Jenkins Pipeline",
+      "goal": "automatiser CI/CD",
+      "stages": [
+        "checkout",
+        "build",
+        "docker build",
+        "docker push",
+        "deploy preprod",
+        "validation",
+        "deploy prod"
+      ]
+    },
+    {
+      "step": 7,
+      "title": "Configurer webhook GitHub",
+      "goal": "déclencher pipeline automatiquement",
+      "trigger": "push"
+    }
+  ],
+  "final_goal": {
+    "ci_cd_pipeline": "push → build → docker → registry → preprod → validation → production",
+    "automation_level": "full",
+    "manual_steps": [
+      "validation préprod",
+      "validation production"
+    ]
+  }
+}
+```
