@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY target/*.jar app.jar
 
-EXPOSE 8080 8081 8082  # Exposer tous les ports possibles
+EXPOSE 8080 8081 8082
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
