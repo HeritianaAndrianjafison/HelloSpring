@@ -35,4 +35,9 @@ public class TestController {
     public String preprod() {
         return "ok preprod !! ";
     }
+
+    @GetMapping("/prod")
+    public String prod() {
+        return "ok prod !! ";
+    }
 }
