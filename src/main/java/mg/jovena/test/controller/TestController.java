@@ -45,4 +45,9 @@ public class TestController {
     public String test() {
         return "ok test !! ";
     }
+
+    @GetMapping("/git")
+    public String git() {
+        return "ok git !! ";
+    }
 }
