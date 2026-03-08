@@ -1,8 +1,12 @@
-java_package: openjdk-17-jdk
-maven_package: maven
-git_package: git
+# Packages à installer automatiquement
+packages:
+  - git
+  - openjdk-17-jdk
+  - maven
 
+# Chemin du projet sur le serveur
 project_path: /home/deploy/hellospring
 
+# Ports des environnements
 port_preprod: 8081
 port_prod: 8082
