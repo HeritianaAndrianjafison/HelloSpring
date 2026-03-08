@@ -50,4 +50,9 @@ public class TestController {
     public String git() {
         return "ok git !! ";
     }
+
+    @GetMapping("/mety")
+    public String mety() {
+        return "ok mety !! ";
+    }
 }
