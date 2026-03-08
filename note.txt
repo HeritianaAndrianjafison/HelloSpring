@@ -1,0 +1,30 @@
+demare jenkns :
+
+    nohup java -jar /opt/jenkins/jenkins.war --httpPort=8080 > /opt/jenkins/jenkins.log 2>&1 &
+
+server :
+
+preprod :  172.29.191.35 : 2222
+prod : 172.29.191.35 : 2223
+
+ssh :
+
+ssh deploy@172.29.191.35 -p 2222
+ssh deploy@172.29.191.35 -p 2223
+ssh deploy@172.29.191.35 -p 2224
+
+demarage server :
+wsl -d jenkins
+wsl -d preprod
+wsl -d prod
+
+liste wsl :
+wsl --list --verbose
+
+eteindre :
+
+wsl --terminate prod
+
+voir le port ssh :
+
+ss -tlnp | grep ssh
