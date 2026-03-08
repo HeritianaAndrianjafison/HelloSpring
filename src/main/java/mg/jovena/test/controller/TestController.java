@@ -41,5 +41,8 @@ public class TestController {
         return "ok prod !! ";
     }
 
-
+    @GetMapping("/test")
+    public String test() {
+        return "ok test !! ";
+    }
 }
