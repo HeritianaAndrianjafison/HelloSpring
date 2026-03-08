@@ -41,8 +41,5 @@ public class TestController {
         return "ok prod !! ";
     }
 
-    @GetMapping("/jenkins")
-    public String jenkins() {
-        return "ok jenkins !! ";
-    }
+
 }

@@ -22,7 +22,7 @@ liste wsl :
 wsl --list --verbose
 
 eteindre :
-
+wsl --shutdown
 wsl --terminate prod
 
 voir le port ssh :
