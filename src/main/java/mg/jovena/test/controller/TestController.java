@@ -40,4 +40,9 @@ public class TestController {
     public String prod() {
         return "ok prod !! ";
     }
+
+    @GetMapping("/jenkins")
+    public String jenkins() {
+        return "ok jenkins !! ";
+    }
 }
