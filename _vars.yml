@@ -1,8 +1,8 @@
-# Logiciels nécessaires
 java_package: openjdk-17-jdk
 maven_package: maven
 git_package: git
 
-# Ports à utiliser
-port_preprod: 8000
-port_prod: 9000
+project_path: /home/deploy/hellospring
+
+port_preprod: 8081
+port_prod: 8082
