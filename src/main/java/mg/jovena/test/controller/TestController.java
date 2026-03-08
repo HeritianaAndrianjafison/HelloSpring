@@ -20,4 +20,9 @@ public class TestController {
     public String sayNo() {
         return "Noooo !! ";
     }
+
+    @GetMapping("/oui")
+    public String sayoui() {
+        return "oui !! ";
+    }
 }
