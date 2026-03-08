@@ -22,7 +22,12 @@ public class TestController {
     }
 
     @GetMapping("/oui")
-    public String sayoui() {
+    public String sayOui() {
         return "oui !! ";
+    }
+
+    @GetMapping("/ok")
+    public String sayOk() {
+        return "ok !! ";
     }
 }
