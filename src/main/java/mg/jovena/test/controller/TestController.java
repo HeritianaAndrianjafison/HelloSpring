@@ -30,4 +30,9 @@ public class TestController {
     public String sayOk() {
         return "ok !! ";
     }
+
+    @GetMapping("/preprod")
+    public String preprod() {
+        return "ok preprod !! ";
+    }
 }
