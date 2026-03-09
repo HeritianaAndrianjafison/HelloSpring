@@ -9,4 +9,9 @@ public class HelloControlleur {
     public String helloWorld() {
         return "Hello Heritiana";
     }
+
+    @GetMapping("/coucou")
+    public String coucou() {
+        return "coucou Heritiana";
+    }
 }
