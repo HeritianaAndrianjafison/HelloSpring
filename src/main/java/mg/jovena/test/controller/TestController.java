@@ -60,4 +60,11 @@ public class TestController {
     public String github() {
         return "ok github !! ";
     }
+
+    @GetMapping("/x")
+    public String x() {
+        return "x github !! ";
+    }
+
+
 }
