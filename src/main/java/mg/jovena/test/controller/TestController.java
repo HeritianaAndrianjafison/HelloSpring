@@ -77,7 +77,7 @@ public class TestController {
     }
 
     @GetMapping("/o")
-    public String z() {
+    public String o() {
         return "ooooooooo !! ";
     }
 
