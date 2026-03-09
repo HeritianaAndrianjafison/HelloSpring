@@ -90,4 +90,9 @@ public class TestController {
     public String r() {
         return "rrrrr !! ";
     }
+
+    @GetMapping("/s")
+    public String s() {
+        return "ssssss !! ";
+    }
 }
