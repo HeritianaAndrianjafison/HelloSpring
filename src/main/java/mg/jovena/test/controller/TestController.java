@@ -55,4 +55,9 @@ public class TestController {
     public String mety() {
         return "ok mety !! ";
     }
+
+    @GetMapping("/github")
+    public String github() {
+        return "ok github !! ";
+    }
 }
