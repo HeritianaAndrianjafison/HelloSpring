@@ -71,5 +71,11 @@ public class TestController {
         return "x y !! ";
     }
 
+    @GetMapping("/z")
+    public String z() {
+        return "x y z !! ";
+    }
+
+
 
 }
