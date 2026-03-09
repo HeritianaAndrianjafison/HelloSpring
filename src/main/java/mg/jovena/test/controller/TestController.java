@@ -86,5 +86,8 @@ public class TestController {
         return "qqqqqqq !! ";
     }
 
-
+    @GetMapping("/r")
+    public String r() {
+        return "rrrrr !! ";
+    }
 }
