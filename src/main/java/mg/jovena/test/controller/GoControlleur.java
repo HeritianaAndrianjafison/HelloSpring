@@ -14,4 +14,9 @@ public class GoControlleur {
     public String e() {
         return "eeeeeee";
     }
+
+    @GetMapping("/yyy")
+    public String yyy() {
+        return "yyy";
+    }
 }
