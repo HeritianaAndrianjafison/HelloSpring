@@ -9,4 +9,9 @@ public class GoControlleur {
     public String h() {
         return "hhhh11";
     }
+
+    @GetMapping("/e")
+    public String e() {
+        return "eeeeeee";
+    }
 }
