@@ -1,7 +1,7 @@
 demare jenkns :
 
     nohup java -jar /opt/jenkins/jenkins.war --httpPort=8080 > /opt/jenkins/jenkins.log 2>&1 &
-
+    heritiana tIna0586*/
 server :
 
 preprod :  172.29.191.35 : 2222
