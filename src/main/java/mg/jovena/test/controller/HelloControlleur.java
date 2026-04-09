@@ -14,4 +14,14 @@ public class HelloControlleur {
     public String coucou() {
         return "coucou Heritiana";
     }
+
+    @GetMapping("/hey")
+    public String hey() {
+        return "hey Heritiana";
+    }
+
+    @GetMapping("/ok")
+    public String ok() {
+        return "ok Heritiana";
+    }
 }
