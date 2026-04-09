@@ -24,6 +24,7 @@ wsl --list --verbose
 eteindre :
 wsl --shutdown
 wsl --terminate prod
+wsl --terminate jenkins
 
 voir le port ssh :
 
