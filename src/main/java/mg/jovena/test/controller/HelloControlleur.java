@@ -20,8 +20,8 @@ public class HelloControlleur {
         return "hey Heritiana";
     }
 
-    @GetMapping("/ok")
-    public String ok() {
-        return "ok Heritiana";
+    @GetMapping("/herriii")
+    public String herriii() {
+        return "herriii Heritiana";
     }
 }
