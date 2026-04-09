@@ -24,4 +24,9 @@ public class HelloControlleur {
     public String herriii() {
         return "herriii Heritiana";
     }
+
+    @GetMapping("/tojo")
+    public String tojo() {
+        return "Hello Tojo";
+    }
 }
