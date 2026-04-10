@@ -29,4 +29,9 @@ public class HelloControlleur {
     public String tojo() {
         return "Hello Tojo";
     }
+
+    @GetMapping("/mp")
+    public String mp() {
+        return "Hello mp";
+    }
 }
