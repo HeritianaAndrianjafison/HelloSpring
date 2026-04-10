@@ -39,4 +39,9 @@ public class HelloControlleur {
     public String dg() {
         return "Hello dg hihih ";
     }
+
+    @GetMapping("/ssh")
+    public String ssh() {
+        return "Hello ssh ";
+    }
 }
