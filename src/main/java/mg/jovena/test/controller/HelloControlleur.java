@@ -48,4 +48,9 @@ public class HelloControlleur {
     public String ssd() {
         return "Hello ssd ";
     }
+
+    @GetMapping("/ssp")
+    public String ssp() {
+        return "Hello ssp ";
+    }
 }
