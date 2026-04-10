@@ -32,6 +32,30 @@ public class HelloControlleur {
 
     @GetMapping("/mp")
     public String mp() {
-        return "Hello mpeeesss";
+        return "Hello mpeeesss hihih ";
+    }
+
+    @GetMapping("/dg")
+    public String dg() {
+        return "Hello dg hihih ";
+    }
+
+    @GetMapping("/ssh")
+    public String ssh() {
+        return "Hello ssh ";
+    }
+    @GetMapping("/ssd")
+    public String ssd() {
+        return "Hello ssd ";
+    }
+
+    @GetMapping("/ssp")
+    public String ssp() {
+        return "Hello ssp ";
+    }
+
+    @GetMapping("/sse")
+    public String sse() {
+        return "Hello sse ";
     }
 }
