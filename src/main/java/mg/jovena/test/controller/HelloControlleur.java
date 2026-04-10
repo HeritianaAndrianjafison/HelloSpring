@@ -44,4 +44,8 @@ public class HelloControlleur {
     public String ssh() {
         return "Hello ssh ";
     }
+    @GetMapping("/ssd")
+    public String ssd() {
+        return "Hello ssd ";
+    }
 }
