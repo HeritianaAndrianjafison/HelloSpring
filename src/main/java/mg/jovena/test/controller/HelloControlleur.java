@@ -32,6 +32,11 @@ public class HelloControlleur {
 
     @GetMapping("/mp")
     public String mp() {
-        return "Hello mpeeesss";
+        return "Hello mpeeesss hihih ";
+    }
+
+    @GetMapping("/dg")
+    public String dg() {
+        return "Hello dg hihih ";
     }
 }
