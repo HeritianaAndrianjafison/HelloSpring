@@ -53,4 +53,9 @@ public class HelloControlleur {
     public String ssp() {
         return "Hello ssp ";
     }
+
+    @GetMapping("/sse")
+    public String sse() {
+        return "Hello sse ";
+    }
 }
