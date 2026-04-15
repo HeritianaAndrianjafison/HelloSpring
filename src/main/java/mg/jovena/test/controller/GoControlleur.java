@@ -24,4 +24,9 @@ public class GoControlleur {
     public String n() {
         return "nnnnnnnnn";
     }
+
+    @GetMapping("/azyu")
+    public String azyu() {
+        return "azyu";
+    }
 }
