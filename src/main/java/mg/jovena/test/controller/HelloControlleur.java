@@ -54,7 +54,7 @@ public class HelloControlleur {
         return "Hello ssp ";
     }
 
-    @GetMapping("/sse")
+    @GetMapping("/")
     public String sse() {
         return "Hello sse ";
     }
